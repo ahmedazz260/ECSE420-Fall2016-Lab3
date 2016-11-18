@@ -5,18 +5,8 @@
 #define MAX4(a, b, c, d) (MAX(MAX(a, b), MAX(c, d)))
 
 __global__ void the_pool(unsigned char * d_out, unsigned char * d_in, unsigned width) {
-	// int idx = blockDim.x*blockIdx.x + threadIdx.x;
-	// int blockId = blockIdx.x + blockIdx.y * gridDim.x;
-	// int idx = blockId * (blockDim.x * blockDim.y) + (threadIdx.y * blockDim.x) + threadIdx.x;
-	
 	int i = 64 * blockIdx.x + 2 * threadIdx.x;
 	int j = 64 * blockIdx.y + 2 * threadIdx.y;
-
-	// if (blockIdx.x == 0 && blockIdx.y == 0) {
-	// 	printf("Doing i = %d, %d\n", threadIdx.x, threadIdx.y);
-	// }
-
-	// printf("thread (%d, %d) in block (%d, %d): idx = %d ---> (%d, %d).\n", threadIdx.x, threadIdx.y, blockIdx.x, blockIdx.y, idx, i, j);
 
 	unsigned char val00, val01, val10, val11;
 
