@@ -2,6 +2,9 @@ CC = nvcc
 
 all : rectify pool convolve
 
+grid_512_512: grid_512_512.o
+	$(CC) grid_512_512.o -o grid_512_512
+
 grid_4_4: grid_4_4.o
 	$(CC) grid_4_4.o -o grid_4_4
 
@@ -15,7 +18,8 @@ convolve: lodepng.o convolve.o
 	$(CC) lodepng.o convolve.o -o convolve
 
 
-
+grid_512_512.o: grid_512_512.cu
+	$(CC) -c grid_512_512.cu -o grid_512_512.o
 
 grid_4_4.o: grid_4_4.cu
 	$(CC) -c grid_4_4.cu -o grid_4_4.o
