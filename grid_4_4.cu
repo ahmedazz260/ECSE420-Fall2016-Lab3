@@ -65,9 +65,9 @@ __global__ void the_iteration(float * new_val, float * val1, float * val2) {
 	SET_VAL_INDEX(new_val, index, value);
 
 	// TODO ask Loren
-	if (row == 2 && col == 2) {
-		printf("%f,\n", GET_VAL(new_val, 32, 2));
-	}
+	// if (row == 2 && col == 2) {
+	// 	printf("%f,\n", GET_VAL(new_val, 32, 2));
+	// }
 }
 
 void process(int iteration_count) {
