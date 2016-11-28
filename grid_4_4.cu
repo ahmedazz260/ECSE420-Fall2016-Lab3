@@ -64,10 +64,9 @@ __global__ void the_iteration(float * new_val, float * val1, float * val2) {
 
 	SET_VAL_INDEX(new_val, index, value);
 
-	// TODO ask Loren
-	// if (row == 2 && col == 2) {
-	// 	printf("%f,\n", GET_VAL(new_val, 32, 2));
-	// }
+	if (row == 2 && col == 2) {
+		printf("%f,\n", GET_VAL(new_val, 2, 2));
+	}
 }
 
 void process(int iteration_count) {
@@ -76,7 +75,7 @@ void process(int iteration_count) {
 	for (int i = 0; i < TOTAL_SIZE; i++) {
 		initial_values[i] = 0.0;
 	}
-	
+
 	// printf("Iteration count is %d.\n", iteration_count);
 
 	// declare GPU memory pointers
@@ -109,7 +108,7 @@ void process(int iteration_count) {
 
 	// copy back the result array to the CPU
 	cudaMemcpy(initial_values, val1, TOTAL_BYTES, cudaMemcpyDeviceToHost);
-	
+
 	// printf("%f,\n", GET_VAL(initial_values, 2, 2));
 }
 

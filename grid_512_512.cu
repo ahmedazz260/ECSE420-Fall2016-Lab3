@@ -6,9 +6,9 @@
 #define RHO 0.5
 #define ETA 0.0002
 
-#define CELLS_ROW_PER_THREAD 1 // CELLS_ROW_PER_THREAD ^ 2 cells per thread
-#define THREADS_ROW_PER_BLOCK 8 // THREADS_ROW_PER_BLOCK ^ 2 threads per block
-#define BLOCKS_ROW_PER_GRID 64 // BLOCKS_ROW_PER_GRID ^ 2 blocks per grid
+#define CELLS_ROW_PER_THREAD 4 // CELLS_ROW_PER_THREAD ^ 2 cells per thread
+#define THREADS_ROW_PER_BLOCK 32 // THREADS_ROW_PER_BLOCK ^ 2 threads per block
+#define BLOCKS_ROW_PER_GRID 4 // BLOCKS_ROW_PER_GRID ^ 2 blocks per grid
 
 #define CELLS_ROW_PER_BLOCK (CELLS_ROW_PER_THREAD * THREADS_ROW_PER_BLOCK)
 
@@ -85,20 +85,25 @@ __global__ void the_block_iteration(float * new_val, float * val1, float * val2)
 		(end_row == SIZE && end_col == SIZE)) {
 		__syncthreads();
 	}
-	
+
 	if (start_row == 0 && start_col == 0) { // Top left corner
 		value = G * GET_VAL(new_val, 0 + 1, 0);
+		SET_VAL(new_val, 0, 0, value);
 	} else if (start_row == 0 && end_col == SIZE) { // Top right corner
 		value = G * GET_VAL(new_val, 0, SIZE - 2);
-	} else if (end_row == SIZE && start_col == 0) { // Bot left corner 
+		SET_VAL(new_val, 0, SIZE - 1, value);
+	} else if (end_row == SIZE && start_col == 0) { // Bot left corner
 		value = G * GET_VAL(new_val, SIZE - 2, 0);
+		SET_VAL(new_val, SIZE - 1, 0, value);
 	} else if (end_row == SIZE && end_col == SIZE) { // Bot right corner
 		value = G * GET_VAL(new_val, SIZE - 1, SIZE - 2);
+		SET_VAL(new_val, SIZE - 1, SIZE - 1, value);
 	}
 
-	// if (start_row == 0 && start_col == 0) {
-	// 	printf("%f,\n", GET_VAL(new_val, SIZE / 2, SIZE / 2));
-	// }
+
+	if (start_row == 0 && start_col == 0) {
+		printf("%f,\n", GET_VAL(new_val, SIZE / 2, SIZE / 2));
+	}
 }
 
 void process(int iteration_count) {
@@ -107,7 +112,7 @@ void process(int iteration_count) {
 	for (int i = 0; i < TOTAL_SIZE; i++) {
 		initial_values[i] = 0.0;
 	}
-	
+
 	// printf("Iteration count is %d.\n", iteration_count);
 
 	// declare GPU memory pointers
@@ -140,7 +145,7 @@ void process(int iteration_count) {
 
 	// copy back the result array to the CPU
 	cudaMemcpy(initial_values, val1, TOTAL_BYTES, cudaMemcpyDeviceToHost);
-	
+
 	// printf("%f,\n", GET_VAL(initial_values, SIZE / 2, SIZE / 2));
 }
 
